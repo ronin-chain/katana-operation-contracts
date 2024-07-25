@@ -5,8 +5,8 @@ interface IAggregateRouter {
   /// @notice Thrown when a required command has failed
   error ExecutionFailed(uint256 commandIndex, bytes message);
 
-  /// @notice Thrown when attempting to send ETH directly to the contract
-  error ETHNotAccepted();
+  /// @notice Thrown when attempting to send RON directly to the contract
+  error RONNotAccepted();
 
   /// @notice Thrown when executing commands with an expired deadline
   error TransactionDeadlinePassed();

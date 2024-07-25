@@ -159,7 +159,7 @@ abstract contract Dispatcher is Payments, V2SwapRouter, V3SwapRouter, LockAndMsg
         }
         bytes calldata data = inputs.toBytes(6); // PermitSingle takes first 6 slots (0..5)
         PERMIT2.permit(lockedBy, permitSingle, data);
-      } else if (command == Commands.WRAP_ETH) {
+      } else if (command == Commands.WRAP_RON) {
         // equivalent: abi.decode(inputs, (address, uint256))
         address recipient;
         uint256 amountMin;
@@ -167,8 +167,8 @@ abstract contract Dispatcher is Payments, V2SwapRouter, V3SwapRouter, LockAndMsg
           recipient := calldataload(inputs.offset)
           amountMin := calldataload(add(inputs.offset, 0x20))
         }
-        Payments.wrapETH(map(recipient), amountMin);
-      } else if (command == Commands.UNWRAP_WETH) {
+        Payments.wrapRON(map(recipient), amountMin);
+      } else if (command == Commands.UNWRAP_WRON) {
         // equivalent: abi.decode(inputs, (address, uint256))
         address recipient;
         uint256 amountMin;
@@ -176,7 +176,7 @@ abstract contract Dispatcher is Payments, V2SwapRouter, V3SwapRouter, LockAndMsg
           recipient := calldataload(inputs.offset)
           amountMin := calldataload(add(inputs.offset, 0x20))
         }
-        Payments.unwrapWETH9(map(recipient), amountMin);
+        Payments.unwrapWRON(map(recipient), amountMin);
       } else if (command == Commands.PERMIT2_TRANSFER_FROM_BATCH) {
         (IAllowanceTransfer.AllowanceTransferDetails[] memory batchDetails) =
           abi.decode(inputs, (IAllowanceTransfer.AllowanceTransferDetails[]));

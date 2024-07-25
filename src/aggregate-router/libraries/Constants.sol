@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 pragma solidity ^0.8.17;
 
-import { IWETH9 } from "../interfaces/external/IWETH9.sol";
+import { IWRON } from "../interfaces/external/IWRON.sol";
 
 /// @title Constant state
 /// @notice Constant state used by the Universal Router
@@ -13,8 +13,8 @@ library Constants {
   /// @dev Used for identifying cases when a v2 pair has already received input tokens
   uint256 internal constant ALREADY_PAID = 0;
 
-  /// @dev Used as a flag for identifying the transfer of ETH instead of a token
-  address internal constant ETH = address(0);
+  /// @dev Used as a flag for identifying the transfer of RON instead of a token
+  address internal constant RON = address(0);
 
   /// @dev Used as a flag for identifying that msg.sender should be used, saves gas by sending more 0 bytes
   address internal constant MSG_SENDER = address(1);

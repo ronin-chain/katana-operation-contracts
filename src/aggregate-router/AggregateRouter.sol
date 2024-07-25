@@ -19,7 +19,7 @@ contract AggregateRouter is IAggregateRouter, Dispatcher {
     KatanaImmutables(
       KatanaParameters(params.v2Factory, params.v3Factory, params.pairInitCodeHash, params.poolInitCodeHash)
     )
-    PaymentsImmutables(PaymentsParameters(params.permit2, params.weth9))
+    PaymentsImmutables(PaymentsParameters(params.permit2, params.wron))
   { }
 
   /// @inheritdoc IAggregateRouter
@@ -60,6 +60,6 @@ contract AggregateRouter is IAggregateRouter, Dispatcher {
     return command & Commands.FLAG_ALLOW_REVERT == 0;
   }
 
-  /// @notice To receive ETH from WETH
+  /// @notice To receive RON from WRON
   receive() external payable { }
 }

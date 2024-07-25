@@ -1,23 +1,23 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 pragma solidity ^0.8.17;
 
-import { IWETH9 } from "../interfaces/external/IWETH9.sol";
+import { IWRON } from "../interfaces/external/IWRON.sol";
 import { IAllowanceTransfer } from "permit2/src/interfaces/IAllowanceTransfer.sol";
 
 struct PaymentsParameters {
   address permit2;
-  address weth9;
+  address wron;
 }
 
 contract PaymentsImmutables {
-  /// @dev WETH9 address
-  IWETH9 internal immutable WETH9;
+  /// @dev WRON address
+  IWRON internal immutable WRON;
 
   /// @dev Permit2 address
   IAllowanceTransfer internal immutable PERMIT2;
 
   constructor(PaymentsParameters memory params) {
-    WETH9 = IWETH9(params.weth9);
+    WRON = IWRON(params.wron);
     PERMIT2 = IAllowanceTransfer(params.permit2);
   }
 }
