@@ -16,6 +16,7 @@ contract DeployKatanaOperationTestnet is UpgradeKatanaGovernance {
       poolInitCodeHash: 0xb381dabeb6037396a764deb39e57a4a3f75b641ce3e9944b1e4b18d036e322e1
     });
 
+    multisig = 0x968D0Cd7343f711216817E617d3f92a23dC91c07;
     proxyAdmin = 0x505d91E8fd2091794b45b27f86C045529fa92CD7;
 
     nonfungiblePositionManager = 0x7C2716803c09cd5eeD78Ba40117084af3c803565;
