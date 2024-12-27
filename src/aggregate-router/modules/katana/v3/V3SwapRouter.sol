@@ -6,6 +6,7 @@ import { BytesLib } from "./BytesLib.sol";
 import { IKatanaGovernance } from "@katana/v3-contracts/external/interfaces/IKatanaGovernance.sol";
 import { SafeCast } from "@katana/v3-contracts/core/libraries/SafeCast.sol";
 import { IKatanaV3Pool } from "@katana/v3-contracts/core/interfaces/IKatanaV3Pool.sol";
+import { IKatanaV3Factory } from "@katana/v3-contracts/core/interfaces/IKatanaV3Factory.sol";
 import { IKatanaV3SwapCallback } from "@katana/v3-contracts/core/interfaces/callback/IKatanaV3SwapCallback.sol";
 import { Constants } from "../../../libraries/Constants.sol";
 import { Permit2Payments } from "../../Permit2Payments.sol";
@@ -48,6 +49,7 @@ abstract contract V3SwapRouter is KatanaImmutables, Permit2Payments, IKatanaV3Sw
     (address tokenIn, uint24 fee, address tokenOut) = path.decodeFirstPool();
 
     if (computePoolAddress(tokenIn, tokenOut, fee) != msg.sender) revert V3InvalidCaller();
+    if (IKatanaV3Factory(KATANA_V3_FACTORY).getPool(tokenIn, tokenOut, fee) != msg.sender) revert V3InvalidCaller();
 
     (bool isExactInput, uint256 amountToPay) =
       amount0Delta > 0 ? (tokenIn < tokenOut, uint256(amount0Delta)) : (tokenOut < tokenIn, uint256(amount1Delta));
@@ -140,6 +142,16 @@ abstract contract V3SwapRouter is KatanaImmutables, Permit2Payments, IKatanaV3Sw
     maxAmountInCached = DEFAULT_MAX_AMOUNT_IN;
   }
 
+  function checkAuthorizedV3Path(bytes calldata path) internal view {
+    uint256 length = path.length / Constants.NEXT_V3_POOL_OFFSET + 1;
+    address[] memory tokens = new address[](length);
+    for (uint256 i; i < length; ++i) {
+      tokens[i] = path.decodeFirstToken();
+      if (i + 1 < length) path = path.skipToken();
+    }
+    if (!IKatanaGovernance(KATANA_GOVERNANCE).isAuthorized(tokens, msg.sender)) revert V3UnauthorizedSwap();
+  }
+
   /// @dev Performs a single swap for both exactIn and exactOut
   /// For exactIn, `amount` is `amountIn`. For exactOut, `amount` is `-amountOut`
   function _swap(int256 amount, address recipient, bytes calldata path, address payer, bool isExactIn)
@@ -147,11 +159,6 @@ abstract contract V3SwapRouter is KatanaImmutables, Permit2Payments, IKatanaV3Sw
     returns (int256 amount0Delta, int256 amount1Delta, bool zeroForOne)
   {
     (address tokenIn, uint24 fee, address tokenOut) = path.decodeFirstPool();
-
-    address[] memory tokens = new address[](2);
-    tokens[0] = tokenIn;
-    tokens[1] = tokenOut;
-    if (!IKatanaGovernance(KATANA_GOVERNANCE).isAuthorized(tokens, msg.sender)) revert V3UnauthorizedSwap();
 
     zeroForOne = isExactIn ? tokenIn < tokenOut : tokenOut < tokenIn;
 
