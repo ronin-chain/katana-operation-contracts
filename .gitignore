@@ -16,3 +16,11 @@ node_modules/
 yarn-error.log
 .yarn
 .yarnrc.yml
+
+# Soldeer
+dependencies/
+
+# Hardhat
+artifacts/
+typechain/
+cache_hardhat/
